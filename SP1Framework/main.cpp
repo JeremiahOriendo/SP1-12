@@ -14,13 +14,13 @@ void mainLoop();
 // TODO:
 // Bug in waitUnitil. it waits for the time from getElapsedTime to waitUntil, but should be insignificant.
 
+
 int main()
 {
-	init();      // initialize your variables
-    mainLoop();  // main loop
-    shutdown();  // do clean up, if any. free memory.
-	
-	return 0;
+	init();
+	mainLoop();
+	shutdown();
+	return EXIT_SUCCESS;
 }
 
 // This main loop calls functions to get input, update and render the game

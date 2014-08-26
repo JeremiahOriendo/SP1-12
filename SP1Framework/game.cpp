@@ -17,6 +17,8 @@ bool keyPressed[K_COUNT];
 
 // Game specific variables here
 COORD charLocation;
+COORD ArrowLocate;
+COORD ArrowLocate2;
 
 void init()
 {
@@ -25,8 +27,11 @@ void init()
 
     initConsole(ConsoleSize, "SP1 Framework");
 
-    charLocation.X = ConsoleSize.X / 2;
-    charLocation.Y = ConsoleSize.Y / 2;
+	ArrowLocate.X = 31;
+	ArrowLocate.Y = 11;
+
+	ArrowLocate2.X = 50;
+	ArrowLocate2.Y = 11;
 }
 
 void shutdown()
@@ -44,6 +49,7 @@ void getInput()
     keyPressed[K_LEFT] = isKeyPressed(VK_LEFT);
     keyPressed[K_RIGHT] = isKeyPressed(VK_RIGHT);
     keyPressed[K_ESCAPE] = isKeyPressed(VK_ESCAPE);
+	keyPressed[K_ENTER] = isKeyPressed(VK_RETURN);
 }
 
 void update(double dt)
@@ -53,21 +59,50 @@ void update(double dt)
     deltaTime = dt;
 
     // Updating the location of the character based on the key press
-    if (keyPressed[K_UP] && charLocation.Y > 0)
+    //if (keyPressed[K_UP] && charLocation.Y > 0)
+    //{
+    //    //Beep(1440, 30);
+    //    charLocation.Y+2; 
+    //}
+	if (keyPressed[K_UP] && ArrowLocate.Y > 11)
     {
         //Beep(1440, 30);
-        charLocation.Y--; 
+        ArrowLocate.Y--; 
+		ArrowLocate2.Y--;
     }
-    if (keyPressed[K_LEFT] && charLocation.X > 0)
+	if (keyPressed[K_DOWN] && ArrowLocate.Y <14)
     {
         //Beep(1440, 30);
-        charLocation.X--;
+        ArrowLocate.Y++;
+		ArrowLocate2.Y++;
     }
-    if (keyPressed[K_DOWN] && charLocation.Y < ConsoleSize.Y - 1)
-    {
-        //Beep(1440, 30);
-        charLocation.Y++;
-    }
+	if (keyPressed[K_ENTER] && ArrowLocate.Y == 11) //Start
+	{
+		init();
+		mainLoop();
+	}
+	if (keyPressed[K_ENTER] && ArrowLocate.Y == 12) //Options
+	{
+		DisplayOptions();
+	}
+	if (keyPressed[K_ENTER] && ArrowLocate.Y == 13) //Choose Ship
+	{
+
+	}
+	if (keyPressed[K_ENTER] && ArrowLocate.Y == 14) //Exit Game
+	{
+		g_quitGame = true; 
+	}
+    //if (keyPressed[K_LEFT] && charLocation.X > 0)
+    //{
+    //    Beep(1440, 30);
+    //    charLocation.X--;
+    //}
+    //if (keyPressed[K_DOWN] && charLocation.Y < ConsoleSize.Y - 1)
+    //{
+    //    //Beep(1440, 30);
+    //    charLocation.Y;
+    //}
     if (keyPressed[K_RIGHT] && charLocation.X < ConsoleSize.X - 1)
     {
         //Beep(1440, 30);
@@ -82,23 +117,18 @@ void update(double dt)
 void render()
 {    
     // Clears the buffer with this colour attribute
-    clearBuffer(0x1F);
-
+    clearBuffer(0x00);
     // Set up sample colours, and output shadings
-    const WORD colors[] =   {
-	                        0x1A, 0x2B, 0x3C, 0x4D, 0x5E, 0x6F,
-	                        0xA1, 0xB2, 0xC3, 0xD4, 0xE5, 0xF6
-	                        };
-	
+	DisplayMainMenu();
     COORD c;
-	for (int i = 0; i < 12; ++i)
+	/*for (int i = 0; i < 12; ++i)
 	{
 		c.X = 5*i;
         c.Y = i+1;
 		colour(colors[i]);
 		writeToBuffer(c, " °±²Û", colors[i]);
 	}
-
+*/
     // displays the framerate
     std::ostringstream ss;
     ss << std::fixed << std::setprecision(3);
@@ -114,11 +144,11 @@ void render()
     c.Y = 0;
     writeToBuffer(c, ss.str(), 0x59);
 
-
     // Draw the location of the character
-    writeToBuffer(charLocation, (char)1, 0x0C);
+    //writeToBuffer(charLocation, (char)1, 0x0C);
+	writeToBuffer(ArrowLocate, (std::string)">>", 0x0C);
+	writeToBuffer(ArrowLocate2, (std::string)"<<", 0x0C);
 
-    
     // Writes the buffer to the console, hence you will see what you have written
     flushBufferToConsole();
 }
